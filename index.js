@@ -46,6 +46,11 @@ async function handleAPIRequest({ url, selector, attr, spaced, pretty }) {
     return generateErrorJSONResponse(error, pretty)
   }
 
+  // adding a way to catch redirects
+  if ([301, 302].includes(scraper.response.status) ) {
+    return generateJSONResponse({ status: scraper.response.status, location: scraper.response.headers.get("Location") }, pretty)
+  }
+  
   try {
     if (!attr) {
       result = await scraper.querySelector(selector).getText({ spaced })

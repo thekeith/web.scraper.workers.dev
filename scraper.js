@@ -8,19 +8,25 @@ class Scraper {
 
   async fetch(url) {
     this.url = url
-    this.response = await fetch(url)
-
+    this.response = await fetch(url, {redirect: "manual"})
+    // await fetch(url, { redirect: "manual" }).then((response) => {
+    //   this.response = response
+    //   console.log(`JSON ${JSON.stringify(response.headers.get("Location"),null,2)}`)
+    // })
+    
     const server = this.response.headers.get('server')
-
+    console.log(`Status Code? ${this.response.status}`)
+    console.log(`Response: ${JSON.stringify(this.response.headers.get("Location"),null,2)}`)
+    
     const isThisWorkerErrorNotErrorWithinScrapedSite = (
       [530, 503, 502, 403, 400].includes(this.response.status) &&
       (server === 'cloudflare' || !server /* Workers preview editor */)
-    )
-
-    if (isThisWorkerErrorNotErrorWithinScrapedSite) {
-      throw new Error(`Status ${ this.response.status } requesting ${ url }`)
-    }
-
+      )
+      
+      if (isThisWorkerErrorNotErrorWithinScrapedSite) {
+        throw new Error(`Status ${ this.response.status } requesting ${ url }`)
+      }
+      
     return this
   }
 
