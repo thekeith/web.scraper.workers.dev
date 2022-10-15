@@ -62,7 +62,7 @@ async function handleAPIRequest({ url, selector, attr, spaced, pretty }) {
     return generateErrorJSONResponse(error, pretty)
   }
   
-  result.status = scraper.response.status;
+  // result.status = scraper.response.status;
   
-  return generateJSONResponse({ result }, pretty)
+  return generateJSONResponse({ status: scraper.response.status, result }, pretty)
 }
